@@ -5,8 +5,8 @@ import (
 	"time"
 )
 
-func getConnection() *sql.DB {
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:8080)/pzn-go-test")
+func GetConnection() *sql.DB {
+	db, err := sql.Open("mysql", "root:root@/pzn-go-test")
 
 	if err != nil {
 		panic(err)
