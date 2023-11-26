@@ -47,10 +47,10 @@ func TestSqlInjection(t *testing.T) {
 	ctx := context.Background()
 
 	username := "admin"
-	password := "salah"
+	password := "admin"
 
-	selectQuery := "SELECT username FROM user WHERE username = '" + username + "' AND password = '" + password + "' LIMIT 1"
-	rows, err := db.QueryContext(ctx, selectQuery)
+	selectQuery := "SELECT username FROM user WHERE username = ? AND password = ? LIMIT 1"
+	rows, err := db.QueryContext(ctx, selectQuery, username, password)
 
 	if err != nil {
 		panic(err)
