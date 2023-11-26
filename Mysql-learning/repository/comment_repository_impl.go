@@ -32,12 +32,12 @@ func (repository *CommentRepositoryImpl) Insert(ctx context.Context, comment ent
 func (repository *CommentRepositoryImpl) FindById(ctx context.Context, id int32) (entity.Comment, error) {
 	sqlQuery := "SELECT id,email,comment FROM comment WHERE id = ?"
 	row, err := repository.DB.QueryContext(ctx, sqlQuery, id)
-	defer row.Close()
+
 	comment := entity.Comment{}
 	if err != nil {
 		return comment, err
 	}
-
+	defer row.Close()
 	if row.Next() {
 
 		err := row.Scan(&comment.Id, &comment.Email, &comment.Comment)
@@ -55,12 +55,11 @@ func (repository *CommentRepositoryImpl) FindById(ctx context.Context, id int32)
 func (repository *CommentRepositoryImpl) FindAll(ctx context.Context, id int32) ([]entity.Comment, error) {
 	sqlQuery := "SELECT id,email,comment FROM comment WHERE id = ?"
 	row, err := repository.DB.QueryContext(ctx, sqlQuery, id)
-	defer row.Close()
 
 	if err != nil {
 		return nil, err
 	}
-
+	defer row.Close()
 	var comments []entity.Comment
 
 	for row.Next() {
