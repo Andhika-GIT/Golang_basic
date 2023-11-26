@@ -78,3 +78,28 @@ func TestSqlInjection(t *testing.T) {
 	// fmt.Println("successfully insert to database")
 
 }
+
+func TestGetLastId(t *testing.T) {
+	db := GetConnection()
+	defer db.Close()
+
+	email := "dhika@gmail.com"
+	comment := "this is a second comment"
+
+	ctx := context.Background()
+	sqlQuery := "INSERT INTO comments(email,comment) VALUES(? , ?)"
+	result, err := db.ExecContext(ctx, sqlQuery, email, comment)
+
+	if err != nil {
+		panic(err)
+	}
+
+	// get the last inserted id
+	insertId, err := result.LastInsertId()
+
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("success inserted new comment with id : ", insertId)
+}
