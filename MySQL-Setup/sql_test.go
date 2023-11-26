@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"testing"
 )
 
@@ -102,4 +103,33 @@ func TestGetLastId(t *testing.T) {
 	}
 
 	fmt.Println("success inserted new comment with id : ", insertId)
+}
+
+func TestPrepareStatement(t *testing.T) {
+	db := GetConnection()
+	defer db.Close()
+
+	ctx := context.Background()
+
+	stmt, err := db.PrepareContext(ctx, "INSERT INTO comments(email,comment) VALUES(? , ?)")
+
+	if err != nil {
+		panic(err)
+	}
+
+	defer stmt.Close()
+
+	for i := 0; i < 10; i++ {
+		// create email and comment until ten times
+		email := "dhikaemailke" + strconv.Itoa(i) + "@gmail.com"
+		comment := "ini komen ke " + strconv.Itoa(i)
+		result, err := stmt.ExecContext(ctx, email, comment)
+
+		if err != nil {
+			panic(err)
+		}
+
+		lastInsertId, _ := result.LastInsertId()
+		fmt.Println("ini adalah comment id ke : ", lastInsertId)
+	}
 }
