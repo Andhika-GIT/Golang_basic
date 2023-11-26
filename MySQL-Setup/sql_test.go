@@ -133,3 +133,45 @@ func TestPrepareStatement(t *testing.T) {
 		fmt.Println("ini adalah comment id ke : ", lastInsertId)
 	}
 }
+
+func TestTransaction(t *testing.T) {
+
+	db := GetConnection()
+
+	defer db.Close()
+
+	ctx := context.Background()
+
+	// begin transaction (save to database, only when transaction is commit)
+	tr, err := db.Begin()
+
+	if err != nil {
+		panic(err)
+	}
+
+	sqlQuery := "INSERT INTO comments(email,comment) VALUES(? , ?)"
+	// do transaction
+
+	for i := 0; i < 10; i++ {
+		// create email and comment until ten times
+		email := "dhikaemailke" + strconv.Itoa(i) + "@gmail.com"
+		comment := "ini komen ke " + strconv.Itoa(i)
+		result, err := tr.ExecContext(ctx, sqlQuery, email, comment)
+
+		if err != nil {
+			panic(err)
+		}
+
+		lastInsertId, _ := result.LastInsertId()
+		fmt.Println("ini adalah comment id ke : ", lastInsertId)
+	}
+
+	// commit transaction (save data to database)
+	err = tr.Commit()
+
+	// check for commit error (can be caused by server error, or wrong id, or duplicate data)
+	if err != nil {
+		panic(err)
+	}
+
+}
