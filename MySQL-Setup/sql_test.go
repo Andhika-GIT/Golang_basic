@@ -167,7 +167,10 @@ func TestTransaction(t *testing.T) {
 	}
 
 	// commit transaction (save data to database)
-	err = tr.Commit()
+	// err = tr.Commit()
+
+	// rollback transaction (canceling saving process to database)
+	err = tr.Rollback()
 
 	// check for commit error (can be caused by server error, or wrong id, or duplicate data)
 	if err != nil {
