@@ -1,4 +1,4 @@
-package main
+package PZN_Golang_Backend
 
 import (
 	"database/sql"
@@ -6,7 +6,7 @@ import (
 )
 
 func GetConnection() *sql.DB {
-	db, err := sql.Open("mysql", "root:root@/pzn-go-test")
+	db, err := sql.Open("mysql", "root:root@/pzn-go-mysql")
 
 	if err != nil {
 		panic(err)

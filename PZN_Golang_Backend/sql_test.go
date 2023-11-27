@@ -1,4 +1,4 @@
-package main
+package PZN_Golang_Backend
 
 import (
 	"context"

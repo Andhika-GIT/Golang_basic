@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"PZN_Golang_Backend/Mysql-learning/entity"
+	"PZN_Golang_Backend/PZN_Golang_Backend/entity"
 	"context"
 )
 
