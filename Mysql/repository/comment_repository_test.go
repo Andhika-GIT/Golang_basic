@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"PZN_Golang_Backend/PZN_Golang_Backend"
-	"PZN_Golang_Backend/PZN_Golang_Backend/entity"
+	MySQL "PZN_Golang_Backend/Mysql"
+	"PZN_Golang_Backend/Mysql/entity"
 	"context"
 	"fmt"
 	"testing"
@@ -11,7 +11,7 @@ import (
 )
 
 func TestCommentInsert(t *testing.T) {
-	var db = PZN_Golang_Backend.GetConnection()
+	var db = MySQL.GetConnection()
 	CommentRepository := NewCommentRepository(db)
 
 	ctx := context.Background()
@@ -31,7 +31,7 @@ func TestCommentInsert(t *testing.T) {
 }
 
 func TestFindCommenyById(t *testing.T) {
-	var db = PZN_Golang_Backend.GetConnection()
+	var db = MySQL.GetConnection()
 	CommentRepository := NewCommentRepository(db)
 
 	ctx := context.Background()
@@ -45,7 +45,7 @@ func TestFindCommenyById(t *testing.T) {
 }
 
 func TestFindAllComments(t *testing.T) {
-	var db = PZN_Golang_Backend.GetConnection()
+	var db = MySQL.GetConnection()
 	CommentRepository := NewCommentRepository(db)
 
 	ctx := context.Background()
