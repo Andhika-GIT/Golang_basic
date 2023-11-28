@@ -30,6 +30,8 @@ func TestServeMux(t *testing.T) {
 
 	mux.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
 		fmt.Fprint(writer, "hello world")
+		fmt.Fprint(writer, request.Method)
+		fmt.Fprint(writer, request.RequestURI)
 	})
 
 	mux.HandleFunc("/hi", func(writer http.ResponseWriter, request *http.Request) {
@@ -49,6 +51,27 @@ func TestServeMux(t *testing.T) {
 	}
 
 	err := server.ListenAndServe()
+	if err != nil {
+		panic(err)
+	}
+}
+
+func TestRequestHandler(t *testing.T) {
+	var handler http.HandlerFunc = func(writer http.ResponseWriter, request *http.Request) {
+		// logic web
+
+		fmt.Fprintln(writer, "hello world")
+		fmt.Fprintln(writer, request.Method)
+		fmt.Fprintln(writer, request.RequestURI)
+	}
+
+	server := http.Server{
+		Addr:    "localhost:8080",
+		Handler: handler,
+	}
+
+	err := server.ListenAndServe()
+
 	if err != nil {
 		panic(err)
 	}
