@@ -135,3 +135,57 @@ func TestQueryParameterHttp(t *testing.T) {
 	fmt.Println("status code : ", response.StatusCode)
 	fmt.Println("body : ", bodyString)
 }
+
+func headerHandler(writer http.ResponseWriter, request *http.Request) {
+	// catch the header from server
+	header := request.Header.Get("Content-Type")
+
+	fmt.Fprint(writer, header)
+}
+
+func TestHeader(t *testing.T) {
+	url := "http://localhost:8080/hello"
+	request := httptest.NewRequest(http.MethodGet, url, nil)
+	request.Header.Set("Content-Type", "application/json")
+	recorder := httptest.NewRecorder()
+
+	headerHandler(recorder, request)
+
+	response := recorder.Result()
+
+	body, _ := io.ReadAll(response.Body)
+
+	bodyString := string(body)
+
+	fmt.Println("code : ", response.StatusCode)
+	fmt.Println("response : ", bodyString)
+
+}
+func responseHeaderHandler(writer http.ResponseWriter, request *http.Request) {
+	// sending header to server
+	writer.Header().Add("X-powered-By", "Andhika")
+
+	fmt.Fprint(writer, "OK")
+}
+
+func TestHeaderResponse(t *testing.T) {
+	url := "http://localhost:8080/"
+	request := httptest.NewRequest(http.MethodGet, url, nil)
+	recorder := httptest.NewRecorder()
+
+	responseHeaderHandler(recorder, request)
+
+	response := recorder.Result()
+
+	// get the header from client
+	header := response.Header.Get("x-powered-By")
+
+	body, _ := io.ReadAll(response.Body)
+
+	bodyString := string(body)
+
+	fmt.Println("code : ", response.StatusCode)
+	fmt.Println("response : ", bodyString)
+	fmt.Println("header is :", header)
+
+}
