@@ -1,4 +1,4 @@
-package main
+package routing
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func main() {
+func startServer() {
 	r := chi.NewRouter()
 
 	err := http.ListenAndServe("localhost:8080", r)
