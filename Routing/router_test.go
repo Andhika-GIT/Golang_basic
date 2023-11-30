@@ -1,8 +1,10 @@
 package routing
 
 import (
+	"embed"
 	"fmt"
 	"io"
+	"io/fs"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -14,6 +16,7 @@ import (
 var url string = "http://localhost:8080/"
 var url2 string = "http://localhost:8080/product/1"
 var url3 string = "http://localhost:8080/product/1/name/vast"
+var url4 string = "http://localhost:8080/files/hello.txt"
 
 func TestRouter(t *testing.T) {
 	r := chi.NewRouter()
@@ -75,4 +78,26 @@ func TestRouterMultipleParam(t *testing.T) {
 
 	assert.Equal(t, "product id 1, product name vast", string(resBody))
 
+}
+
+//go:embed resources
+var resources embed.FS
+
+func TestRouterServeFile(t *testing.T) {
+	r := chi.NewRouter()
+
+	directory, _ := fs.Sub(resources, "resources")
+	fileServer := http.FileServer(http.FS(directory))
+	r.Handle("/files/*", http.StripPrefix("/files", fileServer))
+
+	request := httptest.NewRequest("GET", url4, nil)
+	recorder := httptest.NewRecorder()
+
+	r.ServeHTTP(recorder, request)
+
+	response := recorder.Result()
+
+	resBody, _ := io.ReadAll(response.Body)
+
+	assert.Equal(t, "Hubla httpRouter", string(resBody))
 }
