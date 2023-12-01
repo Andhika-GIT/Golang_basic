@@ -7,22 +7,37 @@ import (
 	"testing"
 )
 
-func TestDecodeJson(t *testing.T) {
-	jsonRequest := `{"Firstname":"andhika","Lastname":"nugraha","Id":12323}`
+func TestDecodeToObject(t *testing.T) {
+	jsonRequest := `{"Firstname":"andhika","Lastname":"nugraha","Skills":["Excel","word"]}`
 
 	// convert the json to slice of bytes
 	jsonBytes := []byte(jsonRequest)
 
 	// take the struct pointer to some variabel
-	customer := &Customer{}
+	user := &User{}
 
 	// convert json to struct (Json.Unmarshal(jsondata, ourvariabel))
-	err := json.Unmarshal(jsonBytes, customer)
+	err := json.Unmarshal(jsonBytes, user)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println(reflect.TypeOf(customer))
-	fmt.Println(customer)
+	fmt.Println(reflect.TypeOf(user))
+	fmt.Println(user)
 
+}
+
+func TestDecodeToSlice(t *testing.T) {
+	jsonRequest := `{"Firstname":"Hubla","Lastname":"Gobs","Skills":["Word","Excel"],"Addresses":[{"Street":"Tole iskandar","Country":"Indonesia"},{"Street":"Juanda","Country":"Indonesia"}]}`
+
+	jsonBytes := []byte(jsonRequest)
+
+	user := &User{}
+
+	err := json.Unmarshal(jsonBytes, user)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(user)
 }

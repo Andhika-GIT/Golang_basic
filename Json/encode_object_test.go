@@ -6,12 +6,6 @@ import (
 	"testing"
 )
 
-type Customer struct {
-	Firstname string
-	Lastname  string
-	Id        int64
-}
-
 func TestEncodeObject(t *testing.T) {
 	c1 := Customer{
 		Firstname: "andhika",
