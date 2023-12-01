@@ -22,3 +22,18 @@ func TestMarshal(t *testing.T) {
 	logJson(true)
 	logJson([]string{"Eko", "kurniawan", "Khannedy"})
 }
+
+func TestEncodeProduct(t *testing.T) {
+	p := Product{
+		Id:    "uisuadfiu29",
+		Name:  "greatproduct",
+		Price: 13293,
+	}
+
+	bytes, err := json.Marshal(p)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(string(bytes))
+}

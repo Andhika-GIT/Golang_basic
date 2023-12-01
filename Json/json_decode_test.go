@@ -41,3 +41,18 @@ func TestDecodeToSlice(t *testing.T) {
 
 	fmt.Println(user)
 }
+
+func TestDecodeProduct(t *testing.T) {
+	jsonRequest := `{"id":"uasdfiu123","name":"greatproduct","price":125000}`
+
+	jsonBytes := []byte(jsonRequest)
+
+	product := &Product{}
+
+	err := json.Unmarshal(jsonBytes, product)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(product)
+}
