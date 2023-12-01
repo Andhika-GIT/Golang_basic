@@ -7,16 +7,16 @@ import (
 )
 
 type Customer struct {
-	firstname string
-	lastname  string
-	id        int64
+	Firstname string
+	Lastname  string
+	Id        int64
 }
 
 func TestEncodeObject(t *testing.T) {
 	c1 := Customer{
-		firstname: "andhika",
-		lastname:  "nugraha",
-		id:        1023910293,
+		Firstname: "andhika",
+		Lastname:  "nugraha",
+		Id:        1023910293,
 	}
 
 	bytes, _ := json.Marshal(c1)
