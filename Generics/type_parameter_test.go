@@ -81,3 +81,23 @@ func TestGenericType(t *testing.T) {
 	PrintWords[string](words)
 
 }
+
+type Data[T any] struct {
+	Name T
+}
+
+func (d *Data[T]) AddName(n T) {
+	d.Name = n
+
+}
+
+func (d *Data[_]) PrintName() {
+	fmt.Println(d.Name)
+}
+
+func TestStructGeneric(t *testing.T) {
+	data := Data[string]{}
+
+	data.AddName("Hubla")
+	data.PrintName()
+}
