@@ -66,3 +66,18 @@ func TestTypeSet(t *testing.T) {
 	assert.Equal(t, Age(5), result3)
 
 }
+
+type Words[T any] []T
+
+func PrintWords[T any](words Words[T]) {
+	for _, value := range words {
+		fmt.Println(value)
+	}
+}
+
+func TestGenericType(t *testing.T) {
+	words := Words[string]{"andhika", "hubla", "rido"}
+
+	PrintWords[string](words)
+
+}
