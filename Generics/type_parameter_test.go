@@ -101,3 +101,39 @@ func TestStructGeneric(t *testing.T) {
 	data.AddName("Hubla")
 	data.PrintName()
 }
+
+type EmployeeData struct {
+	Name string
+	Age  int
+}
+
+type EmployeeService[T any] interface {
+	GetValue() T
+	SetValue(value T)
+}
+
+type Employee[T any] struct {
+	Data T
+}
+
+func (e *Employee[T]) GetValue() T {
+	return e.Data
+}
+
+func (e *Employee[T]) SetValue(value T) {
+	e.Data = value
+}
+
+func TestInterfaceGeneric(t *testing.T) {
+
+	employee1 := Employee[EmployeeData]{}
+
+	data := EmployeeData{
+		Name: "Hubla",
+		Age:  19,
+	}
+	employee1.SetValue(data)
+	employeeData := employee1.GetValue()
+	fmt.Println(employeeData)
+
+}
