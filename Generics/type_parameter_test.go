@@ -45,8 +45,10 @@ func TestComparableParam(t *testing.T) {
 	assert.True(t, result2)
 }
 
+type Age int
+
 type Number interface {
-	int | int16 | int32 | int64 | float32 | float64
+	~int | int16 | int32 | int64 | float32 | float64
 }
 
 func Substract[T Number](num1, num2 T) T {
@@ -56,8 +58,11 @@ func Substract[T Number](num1, num2 T) T {
 func TestTypeSet(t *testing.T) {
 	result := Substract[int](5, 10)
 	result2 := Substract[float32](5, 10)
+	result3 := Substract[Age](5, 10)
 
 	assert.Equal(t, int(5), result)
 	assert.Equal(t, float32(5), result2)
-	assert.Equal(t, int(5), result2)
+	// assert.Equal(t, int(5), result2)
+	assert.Equal(t, Age(5), result3)
+
 }
