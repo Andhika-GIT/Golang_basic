@@ -47,12 +47,12 @@ func TestMultipleTags(t *testing.T) {
 
 // -------------- STRUCT VALIDATION ---------------
 
-type User struct {
-	Username string `validate:"required,min=3"`
-	Email    string `validate:"required,email,min=3"`
-}
-
 func TestStructValidation(t *testing.T) {
+	type User struct {
+		Username string `validate:"required,min=3"`
+		Email    string `validate:"required,email,min=3"`
+	}
+
 	validate := validator.New()
 
 	user1 := User{
@@ -64,5 +64,31 @@ func TestStructValidation(t *testing.T) {
 
 	if err != nil {
 		fmt.Println(err)
+	}
+}
+
+func TestValidationErrors(t *testing.T) {
+	type User struct {
+		Username string `validate:"required,min=3"`
+		Email    string `validate:"required,email,min=3"`
+	}
+	validate := validator.New()
+
+	user := User{
+		Username: "A",
+		Email:    "E",
+	}
+
+	err := validate.Struct(user)
+
+	if err != nil {
+		fmt.Println("err")
+		// insert all validation erorrs info into validationErrors variabel ( return []fielderror)
+		validationErrors := err.(validator.ValidationErrors)
+
+		// iterate through all errors
+		for _, fieldError := range validationErrors {
+			fmt.Println("error field : ", fieldError.Field(), "\ton tag", fieldError.Tag(), "\twith error : ", fieldError.Error())
+		}
 	}
 }
