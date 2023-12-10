@@ -1,6 +1,7 @@
 package validation
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/go-playground/validator/v10"
@@ -28,5 +29,18 @@ func TestValidationTwoVariabels(t *testing.T) {
 
 	if err != nil {
 		panic(err)
+	}
+}
+
+func TestMultipleTags(t *testing.T) {
+	validate := validator.New()
+
+	// var1 := "eko123"
+	var2 := 12313
+
+	err := validate.Var(var2, "required,number")
+
+	if err != nil {
+		fmt.Println(err.Error())
 	}
 }
