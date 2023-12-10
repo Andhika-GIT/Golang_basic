@@ -92,3 +92,30 @@ func TestValidationErrors(t *testing.T) {
 		}
 	}
 }
+
+func TestCrossField(t *testing.T) {
+	type User struct {
+		Username        string `validate:"required,min=3"`
+		Password        string `validate:"required,min=3"`
+		ConfirmPassword string `validate:"required,min=3,eqfield=Password"`
+	}
+
+	validate := validator.New()
+
+	user := User{
+		Username:        "A",
+		Password:        "halo",
+		ConfirmPassword: "helo",
+	}
+
+	err := validate.Struct(user)
+	fmt.Println(err)
+
+	if err != nil {
+		validationErrors := err.(validator.ValidationErrors)
+
+		for _, fieldError := range validationErrors {
+			fmt.Println("error field : ", fieldError.Field(), "\ton tag", fieldError.Tag(), "\twith error : ", fieldError.Error())
+		}
+	}
+}
