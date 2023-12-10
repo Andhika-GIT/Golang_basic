@@ -44,3 +44,25 @@ func TestMultipleTags(t *testing.T) {
 		fmt.Println(err.Error())
 	}
 }
+
+// -------------- STRUCT VALIDATION ---------------
+
+type User struct {
+	Username string `validate:"required,min=3"`
+	Email    string `validate:"required,email,min=3"`
+}
+
+func TestStructValidation(t *testing.T) {
+	validate := validator.New()
+
+	user1 := User{
+		Username: "Andhika",
+		Email:    "asdfasfsdf",
+	}
+
+	err := validate.Struct(user1)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+}
