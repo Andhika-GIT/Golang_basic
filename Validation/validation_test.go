@@ -223,3 +223,17 @@ func TestNestedStructMaps(t *testing.T) {
 		}
 	}
 }
+
+// ----------- ALIAS TAGS -----------
+
+func TestAliasTags(t *testing.T) {
+	validate := validator.New()
+
+	// create our own tag validation
+	validate.RegisterAlias("varchar", "required,max=255")
+
+	type Seller struct {
+		Name  string `validate:"varchar"`
+		Owner string `validate:"varchar"`
+	}
+}
