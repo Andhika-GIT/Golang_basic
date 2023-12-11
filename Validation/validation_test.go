@@ -294,3 +294,73 @@ func TestCustomValidation(t *testing.T) {
 		fmt.Println(err)
 	}
 }
+
+// ----------- OR RULE -----------
+
+func TestOrRule(t *testing.T) {
+	type User[T any] struct {
+		Username T      `validate:"required,email|numeric"`
+		Password string `validate:"required"`
+	}
+
+	user := User[int]{
+		Username: 10239,
+		Password: "testpass",
+	}
+
+	validate := validator.New()
+	err := validate.Struct(user)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
+// ----------- GET THE DEFAULT VALUE AND SECOND VALUE -----------
+
+func MustEqual(field validator.FieldLevel) bool {
+	// GetStructFieldOK2 returns 4 things
+	// the value itself, the value type, is the value is nullable, is the value nil or empty
+	// we only need first thing (the value) and four thing (is the value nil or emtpy)
+	value, _, _, ok := field.GetStructFieldOK2()
+
+	if !ok {
+		fmt.Println("field not ok")
+	}
+
+	//	ex :  Username `validate:"mustEqual = Email"`
+	// Username -> first value
+	// Email 	-> second value
+	firstValue := strings.ToUpper(field.Field().String())
+	secondValue := strings.ToUpper(value.String())
+
+	// return true or false whenver if the first value is the same as second value
+	return firstValue == secondValue
+}
+
+func TestValidationCrossField(t *testing.T) {
+	validate := validator.New()
+	validate.RegisterValidation("must_equal", MustEqual)
+
+	type User struct {
+		Username string `validate:"required"`
+		Password string `validate:"required,min=3"`
+
+		// ConfirmPassword string `validate:"must_equal=Password"`
+		// ConfirmPassword -> first value
+		// Password 	   -> second value
+		ConfirmPassword string `validate:"required,must_equal=Password"`
+	}
+
+	user := User{
+		Username:        "Hubla",
+		Password:        "halo",
+		ConfirmPassword: "helo",
+	}
+
+	err := validate.Struct(user)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+}
