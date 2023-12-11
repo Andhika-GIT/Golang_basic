@@ -2,6 +2,7 @@ package validation
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/go-playground/validator/v10"
@@ -235,5 +236,61 @@ func TestAliasTags(t *testing.T) {
 	type Seller struct {
 		Name  string `validate:"varchar"`
 		Owner string `validate:"varchar"`
+	}
+}
+
+// ----------- CUSTOM VALIDATION -----------
+func MustValidUsername(field validator.FieldLevel) bool {
+	value, ok := field.Field().Interface().(string)
+
+	if ok {
+		if value != strings.ToUpper(value) {
+			return false
+		}
+
+		if len(value) < 5 {
+			return false
+		}
+	}
+
+	return true
+}
+
+func MustValidEmail(field validator.FieldLevel) bool {
+	value, ok := field.Field().Interface().(string)
+
+	if ok {
+		if strings.Contains(value, "@") == false {
+			return false
+		}
+
+		if strings.Contains(value, ".com") == false {
+			return false
+		}
+
+	}
+
+	return true
+}
+
+func TestCustomValidation(t *testing.T) {
+	validate := validator.New()
+	validate.RegisterValidation("username", MustValidUsername)
+	validate.RegisterValidation("email", MustValidEmail)
+
+	type User struct {
+		Username string `validate:"username"`
+		Email    string `validate:"email"`
+	}
+
+	user := User{
+		Username: "HUBLA",
+		Email:    "hubla",
+	}
+
+	err := validate.Struct(user)
+
+	if err != nil {
+		fmt.Println(err)
 	}
 }
