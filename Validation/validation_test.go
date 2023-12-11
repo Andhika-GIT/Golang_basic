@@ -119,3 +119,51 @@ func TestCrossField(t *testing.T) {
 		}
 	}
 }
+
+// ----------- NESTED STRUCT AND COLLECTION ----------_
+
+type Employee struct {
+	Name  string `validate:"required"`
+	Email string `validate:"required,email"`
+}
+
+type Company struct {
+	Name    string `validate:"required"`
+	Address string `validate:"required"`
+	// we use dive when it comes to slice collection, or nested struct
+	Employees []Employee `validate:"dive,required"`
+	Branch    []string   `validate:"dive,min=3"`
+}
+
+func TestNestedStructCollection(t *testing.T) {
+	company := Company{
+		Name:    "Hubla world",
+		Address: "Depok country",
+		Employees: []Employee{
+			{
+				Name:  "",
+				Email: "",
+			},
+			{
+				Name:  "",
+				Email: "",
+			},
+		},
+		Branch: []string{
+			"h",
+			"a",
+		},
+	}
+
+	validate := validator.New()
+
+	err := validate.Struct(company)
+
+	if err != nil {
+		validationErrors := err.(validator.ValidationErrors)
+
+		for _, fieldError := range validationErrors {
+			fmt.Println("error field : ", fieldError.Field(), "\ton tag", fieldError.Tag(), "\twith error : ", fieldError.Error())
+		}
+	}
+}
