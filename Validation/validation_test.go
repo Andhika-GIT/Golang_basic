@@ -120,7 +120,7 @@ func TestCrossField(t *testing.T) {
 	}
 }
 
-// ----------- NESTED STRUCT AND COLLECTION ----------_
+// ----------- NESTED STRUCT AND COLLECTION -----------
 
 type Employee struct {
 	Name  string `validate:"required"`
@@ -158,6 +158,62 @@ func TestNestedStructCollection(t *testing.T) {
 	validate := validator.New()
 
 	err := validate.Struct(company)
+
+	if err != nil {
+		validationErrors := err.(validator.ValidationErrors)
+
+		for _, fieldError := range validationErrors {
+			fmt.Println("error field : ", fieldError.Field(), "\ton tag", fieldError.Tag(), "\twith error : ", fieldError.Error())
+		}
+	}
+}
+
+// ----------- NESTED STRUCT AND MAPS -----------
+type School struct {
+	Name string `validate:"required"`
+}
+
+type Student struct {
+	Name    string   `validate:"required,min=3"`
+	Hobbies []string `validate:"dive,required"`
+
+	// Schools -> required
+	// map[string] -> dive,keys,required,min=2
+	// school -> endkeys,dive
+	Schools map[string]School `validate:"required,dive,keys,required,min=2,endkeys"`
+
+	// Wallet ->
+	// map[string] -> dive, keys, required
+	// int -> endkeys,required
+	Wallet map[string]int `validate:"dive,keys,required,endkeys,required"`
+}
+
+func TestNestedStructMaps(t *testing.T) {
+
+	school := map[string]School{
+		"SD": {
+			Name: "Santo aloysius",
+		},
+		"SMP": {
+			Name: "",
+		},
+	}
+
+	wallet := map[string]int{
+		"ovo":   2,
+		"gopay": 0,
+	}
+
+	student := Student{
+		Name:    "Hubla",
+		Hobbies: []string{"berack"},
+		Schools: school,
+		Wallet:  wallet,
+	}
+
+	validate := validator.New()
+
+	err := validate.Struct(student)
 
 	if err != nil {
 		validationErrors := err.(validator.ValidationErrors)
